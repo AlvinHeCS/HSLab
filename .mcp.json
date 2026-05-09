@@ -5,8 +5,15 @@
       "url": "https://mcp.vercel.com"
     },
     "supabase": {
-      "type": "http",
-      "url": "https://mcp.supabase.com/mcp?project_ref=jrkmewxzqlfpbdkewjkd"
+      "command": "npx",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase@latest",
+        "--project-ref=jrkmewxzqlfpbdkewjkd"
+      ],
+      "env": {
+        "SUPABASE_ACCESS_TOKEN": "${SUPABASE_ACCESS_TOKEN}"
+      }
     }
   }
 }

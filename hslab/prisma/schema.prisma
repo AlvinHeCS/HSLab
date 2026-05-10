@@ -5,7 +5,8 @@
 // - IDs: cuid (matches T3 / NextAuth scaffold)
 // - Rich content: TipTap JSON in Json fields (text + math + tables + images, in document order)
 // - LaTeX: stored inside TipTap math nodes, rendered client-side with KaTeX
-// - Images: TipTap image nodes pointing to S3 URLs
+// - Images: TipTap image nodes pointing to Supabase Storage public URLs
+//   (bucket: question-images; uploads minted via signed URLs from uploadsRouter)
 // - Math topic/subtopic enums: placeholder values until NESA syllabus is scraped and seeded
 // - Hierarchy enforcement (grade→topic→subtopic) lives in src/server/taxonomy.ts, not in DB
 //

@@ -9,7 +9,7 @@ export const env = createEnv({
   server: {
     DATABASE_URL: z.string().url(),
     /** Shared passphrase that unlocks the whole site. */
-    SITE_PASSPHRASE: z.string().min(8),
+    SITE_PASSPHRASE: z.string(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),

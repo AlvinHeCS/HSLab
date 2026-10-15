@@ -89,6 +89,26 @@ const DAY_MS = 86_400_000;
 
 const toUtc = (date: DayKey) => Date.UTC(date.year, date.month - 1, date.day);
 
+/** Whole days from `today` to `date`; negative once `date` has passed. */
+export function daysUntil(date: DayKey, today: DayKey): number {
+  return Math.round((toUtc(date) - toUtc(today)) / DAY_MS);
+}
+
+/** A Postgres `date` column as a DayKey (Prisma hands it back as UTC midnight). */
+export function dayKeyOf(date: Date): DayKey {
+  return {
+    year: date.getUTCFullYear(),
+    month: date.getUTCMonth() + 1,
+    day: date.getUTCDate(),
+  };
+}
+
+/** "YYYY-MM-DD", the format `<input type="date">` reads and writes. */
+export function isoDay(date: DayKey): string {
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${date.year}-${pad(date.month)}-${pad(date.day)}`;
+}
+
 export function todayIn(timeZone = TIME_ZONE, now = new Date()): DayKey {
   const parts = new Intl.DateTimeFormat("en-CA", {
     timeZone,
@@ -145,7 +165,7 @@ function occurrence(
   return {
     ...special,
     date,
-    daysUntil: Math.round((toUtc(date) - toUtc(today)) / DAY_MS),
+    daysUntil: daysUntil(date, today),
     age: special.birthYear === undefined ? undefined : year - special.birthYear,
   };
 }

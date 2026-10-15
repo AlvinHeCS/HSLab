@@ -6,6 +6,7 @@ import { Countdown } from "~/app/_components/countdown";
 import bears from "~/app/icon.png";
 import {
   type DayKey,
+  dayKeyOf,
   formatDay,
   formatDaysUntil,
   type Occurrence,
@@ -13,6 +14,7 @@ import {
   todayIn,
   upcoming,
 } from "~/lib/special-dates";
+import { api } from "~/trpc/server";
 
 // "Today" changes daily, so never serve a page prerendered at build time.
 export const dynamic = "force-dynamic";
@@ -27,9 +29,14 @@ export default async function Home({
   const celebrating = dates.filter((d) => d.daysUntil === 0);
   const next = dates.find((d) => d.daysUntil > 0)!;
   const anniversary = dates.find((d) => d.id === "anniversary")!;
+  const outings = (await api.dates.list()).map(({ id, title, day }) => ({
+    id,
+    title,
+    day: dayKeyOf(day),
+  }));
 
   return (
-    <main className="min-h-screen bg-[#f9e2e1] px-4 py-10 text-[#5b4636]">
+    <main className="px-4 py-6">
       {celebrating.length > 0 && <Confetti />}
       <div className="mx-auto flex max-w-md flex-col gap-5">
         <header className="flex flex-col items-center gap-2 text-center">
@@ -81,7 +88,7 @@ export default async function Home({
 
         <ComingUp dates={dates} />
 
-        <Calendar today={today} />
+        <Calendar today={today} outings={outings} />
       </div>
     </main>
   );

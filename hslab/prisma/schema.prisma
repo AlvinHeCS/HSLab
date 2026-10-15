@@ -20,3 +20,72 @@ model Post {
 
   @@index([name])
 }
+
+enum Person {
+  alvin
+  vivian
+}
+
+/// Somewhere in Sydney we've been or want to go. Search results come from OpenStreetMap,
+/// so `source` + `sourceId` identify the OSM element and stop the same place being saved twice.
+model Place {
+  id        String   @id @default(cuid())
+  source    String
+  sourceId  String
+  name      String
+  category  String?
+  address   String?
+  suburb    String?
+  lat       Float?
+  lng       Float?
+  /// Venue website or booking page. We link out rather than book in-app.
+  website   String?
+  createdAt DateTime @default(now())
+
+  stops    DateStop[]
+  wishlist WishlistItem?
+
+  @@unique([source, sourceId])
+}
+
+/// A date we've been on or have planned: one day, made up of ordered stops.
+model DatePlan {
+  id         String     @id @default(cuid())
+  title      String
+  day        DateTime   @db.Date
+  /// `SPECIAL_DATES` id when the date celebrates one, e.g. "anniversary".
+  occasionId String?
+  notes      String?
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  stops      DateStop[]
+
+  @@index([day])
+}
+
+model DateStop {
+  id           String   @id @default(cuid())
+  planId       String
+  plan         DatePlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  placeId      String
+  place        Place    @relation(fields: [placeId], references: [id])
+  order        Int
+  /// Wall-clock time in Sydney, "HH:MM".
+  time         String?
+  notes        String?
+  /// 1–5 hearts each, once we've been.
+  ratingAlvin  Int?
+  ratingVivian Int?
+
+  @@index([planId])
+  @@index([placeId])
+}
+
+model WishlistItem {
+  id        String   @id @default(cuid())
+  placeId   String   @unique
+  place     Place    @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  addedBy   Person
+  reason    String?
+  createdAt DateTime @default(now())
+}

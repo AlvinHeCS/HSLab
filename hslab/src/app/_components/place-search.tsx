@@ -38,12 +38,14 @@ export function PlaceSearch({
         disabled={save.isPending}
       />
       {query.length >= 2 && text.trim().length >= 2 && (
-        <ul className="divide-y divide-[#f9e2e1] rounded-2xl bg-white">
+        <ul className="divide-blush border-ink divide-y-2 overflow-hidden rounded-2xl border-2 bg-white">
           {results.isLoading && (
-            <li className="px-3 py-2 text-sm opacity-60">Searching…</li>
+            <li className="px-3 py-2 text-sm font-bold opacity-60">
+              Searching…
+            </li>
           )}
           {results.error && (
-            <li className="px-3 py-2 text-sm text-red-700">
+            <li className="px-3 py-2 text-sm font-bold text-red-700">
               Search isn&apos;t working right now.
             </li>
           )}
@@ -53,10 +55,10 @@ export function PlaceSearch({
                 type="button"
                 disabled={save.isPending}
                 onClick={() => save.mutate({ source: "osm", ...place })}
-                className="w-full px-3 py-2 text-left hover:bg-[#f9e2e1]"
+                className="hover:bg-blush w-full px-3 py-2 text-left"
               >
-                <p className="font-semibold">{place.name}</p>
-                <p className="text-xs opacity-70">
+                <p className="font-extrabold">{place.name}</p>
+                <p className="text-xs font-bold opacity-65">
                   {[place.category, place.address, place.suburb]
                     .filter(Boolean)
                     .join(" · ")}
@@ -71,7 +73,7 @@ export function PlaceSearch({
               onClick={() =>
                 save.mutate({ source: "manual", name: text.trim() })
               }
-              className="w-full px-3 py-2 text-left text-sm hover:bg-[#f9e2e1]"
+              className="hover:bg-blush w-full px-3 py-2 text-left text-sm font-bold"
             >
               Can&apos;t find it? Add “{text.trim()}” by name
             </button>

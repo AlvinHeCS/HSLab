@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 
-import { DateHeader } from "~/app/dates/_components/date-header";
-import { StopList } from "~/app/dates/_components/stop-list";
-import { card } from "~/app/_components/ui";
+import { DateHeader } from "~/app/(site)/dates/_components/date-header";
+import { StopList } from "~/app/(site)/dates/_components/stop-list";
+import { card, cardTitle, eyebrow, page } from "~/app/_components/ui";
 import {
   dayKeyOf,
   daysUntil,
@@ -29,7 +29,7 @@ export default async function DatePage({
   const occasion = SPECIAL_DATES.find((d) => d.id === plan.occasionId);
 
   return (
-    <main className="mx-auto flex max-w-md flex-col gap-5 px-4 py-6">
+    <main className={page}>
       <section className={card}>
         <DateHeader
           id={plan.id}
@@ -41,16 +41,20 @@ export default async function DatePage({
           }}
           heading={
             <>
-              <p className="text-xs font-semibold tracking-wide uppercase opacity-60">
+              <p className={eyebrow}>
                 {occasion ? `${occasion.emoji} ${occasion.title}` : "💌 Date"}
               </p>
-              <h1 className="mt-1 text-2xl font-extrabold">{plan.title}</h1>
-              <p className="opacity-80">
+              <h1 className="font-display mt-0.5 text-[26px] leading-tight font-bold">
+                {plan.title}
+              </h1>
+              <p className="text-sm font-bold opacity-70">
                 {formatDay(day)}
                 {until >= 0 && ` · ${formatDaysUntil(until)}`}
               </p>
               {plan.notes && (
-                <p className="mt-2 whitespace-pre-wrap">{plan.notes}</p>
+                <p className="mt-2 font-semibold whitespace-pre-wrap">
+                  {plan.notes}
+                </p>
               )}
             </>
           }
@@ -58,7 +62,7 @@ export default async function DatePage({
       </section>
 
       <section className={card}>
-        <h2 className="mb-3 text-lg font-bold">The plan</h2>
+        <h2 className={`${cardTitle} mb-3`}>The plan</h2>
         <StopList planId={plan.id} stops={plan.stops} canRate={until <= 0} />
       </section>
     </main>

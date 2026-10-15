@@ -1,9 +1,8 @@
 import "~/styles/globals.css";
 
 import { type Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Fredoka, Nunito } from "next/font/google";
 
-import { Nav } from "~/app/_components/nav";
 import { TRPCReactProvider } from "~/trpc/react";
 
 export const metadata: Metadata = {
@@ -11,21 +10,23 @@ export const metadata: Metadata = {
   description: "Alvin & Vivian 💕",
 };
 
-const geist = Geist({
+const fredoka = Fredoka({
   subsets: ["latin"],
-  variable: "--font-geist-sans",
+  variable: "--font-fredoka",
+});
+
+const nunito = Nunito({
+  subsets: ["latin"],
+  variable: "--font-nunito",
 });
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${geist.variable}`}>
-      <body className="min-h-screen bg-[#f9e2e1] text-[#5b4636]">
-        <TRPCReactProvider>
-          <Nav />
-          {children}
-        </TRPCReactProvider>
+    <html lang="en" className={`${fredoka.variable} ${nunito.variable}`}>
+      <body className="bg-cream text-ink min-h-screen font-sans">
+        <TRPCReactProvider>{children}</TRPCReactProvider>
       </body>
     </html>
   );

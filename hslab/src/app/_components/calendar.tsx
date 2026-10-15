@@ -1,12 +1,22 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
 import { type DayKey, occurrencesInMonth } from "~/lib/special-dates";
 
+/** A date we've logged or planned, shown alongside the special dates. */
+type Outing = { id: string; title: string; day: DayKey };
+
 const WEEKDAYS = ["M", "T", "W", "T", "F", "S", "S"];
 
-export function Calendar({ today }: { today: DayKey }) {
+export function Calendar({
+  today,
+  outings,
+}: {
+  today: DayKey;
+  outings: Outing[];
+}) {
   const [view, setView] = useState({ year: today.year, month: today.month });
 
   const shiftMonth = (delta: number) =>
@@ -21,6 +31,9 @@ export function Calendar({ today }: { today: DayKey }) {
   const leadingBlanks = (firstWeekday + 6) % 7; // weeks start on Monday
   const daysInMonth = new Date(Date.UTC(view.year, view.month, 0)).getUTCDate();
   const specials = occurrencesInMonth(view.year, view.month, today);
+  const monthOutings = outings
+    .filter(({ day }) => day.year === view.year && day.month === view.month)
+    .sort((a, b) => a.day.day - b.day.day);
   const monthName = new Intl.DateTimeFormat("en-AU", {
     timeZone: "UTC",
     month: "long",
@@ -61,6 +74,7 @@ export function Calendar({ today }: { today: DayKey }) {
         {Array.from({ length: daysInMonth }, (_, i) => {
           const day = i + 1;
           const special = specials.find((s) => s.day === day);
+          const outing = monthOutings.find((o) => o.day.day === day);
           const isToday =
             view.year === today.year &&
             view.month === today.month &&
@@ -68,25 +82,40 @@ export function Calendar({ today }: { today: DayKey }) {
           return (
             <div
               key={day}
-              title={special?.title}
+              title={special?.title ?? outing?.title}
               className={`flex aspect-square flex-col items-center justify-center rounded-xl ${
-                special ? "bg-[#f9e2e1] font-bold" : ""
+                special || outing ? "bg-[#f9e2e1] font-bold" : ""
               } ${isToday ? "ring-2 ring-[#5b4636]" : ""}`}
             >
               <span>{day}</span>
-              {special && <span className="text-xs">{special.emoji}</span>}
+              {special ? (
+                <span className="text-xs">{special.emoji}</span>
+              ) : (
+                outing && <span className="text-xs">💌</span>
+              )}
             </div>
           );
         })}
       </div>
 
-      {specials.length > 0 && (
+      {specials.length + monthOutings.length > 0 && (
         <ul className="mt-4 space-y-1 text-sm">
           {specials.map((special) => (
             <li key={special.id}>
               {special.emoji} {special.day} —{" "}
               <span className="font-semibold">{special.title}</span>
               {special.age !== undefined && ` (turns ${special.age})`}
+            </li>
+          ))}
+          {monthOutings.map((outing) => (
+            <li key={outing.id}>
+              💌 {outing.day.day} —{" "}
+              <Link
+                href={`/dates/${outing.id}`}
+                className="font-semibold underline decoration-dotted"
+              >
+                {outing.title}
+              </Link>
             </li>
           ))}
         </ul>

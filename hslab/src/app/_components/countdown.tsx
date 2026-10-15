@@ -3,11 +3,12 @@
 import { useEffect, useState } from "react";
 
 const UNITS = [
-  ["days", 86_400_000],
-  ["hours", 3_600_000],
-  ["mins", 60_000],
-  ["secs", 1_000],
-] as const;
+  { ms: 86_400_000, short: "days", long: "days" },
+  { ms: 3_600_000, short: "hrs", long: "hours" },
+  { ms: 60_000, short: "min", long: "minutes" },
+  // Seconds only fit beside the others on the wide desktop hero.
+  { ms: 1_000, short: "sec", long: "seconds", desktopOnly: true },
+];
 
 /** Ticks down to `target`. Starts from the server's clock so hydration matches. */
 export function Countdown({
@@ -28,15 +29,18 @@ export function Countdown({
   let remaining = Math.max(0, target - now);
 
   return (
-    <div className="grid grid-cols-4 gap-2">
-      {UNITS.map(([label, ms]) => {
+    <div className="mt-3 flex items-end gap-3 lg:mt-3.5 lg:gap-7">
+      {UNITS.map(({ ms, short, long, desktopOnly }, i) => {
         const value = Math.floor(remaining / ms);
         remaining -= value * ms;
         return (
-          <div key={label} className="rounded-2xl bg-[#f9e2e1] py-3">
-            <p className="text-3xl font-bold tabular-nums">{value}</p>
-            <p className="text-xs tracking-wide uppercase opacity-70">
-              {label}
+          <div key={long} className={desktopOnly ? "hidden lg:block" : ""}>
+            <p className="font-display text-[56px] leading-none font-bold tabular-nums lg:text-[88px]">
+              {i === 0 ? value : String(value).padStart(2, "0")}
+            </p>
+            <p className="mt-1 text-xs font-bold opacity-80 lg:mt-0 lg:text-sm">
+              <span className="lg:hidden">{short}</span>
+              <span className="hidden lg:inline">{long}</span>
             </p>
           </div>
         );

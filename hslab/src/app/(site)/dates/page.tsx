@@ -1,6 +1,14 @@
 import Link from "next/link";
 
-import { button, card } from "~/app/_components/ui";
+import {
+  blushPill,
+  button,
+  card,
+  cardTitle,
+  emojiTile,
+  page,
+  pageTitle,
+} from "~/app/_components/ui";
 import {
   dayKeyOf,
   daysUntil,
@@ -27,21 +35,23 @@ export default async function DatesPage() {
   const past = plans.filter((p) => p.daysUntil < 0);
 
   return (
-    <main className="mx-auto flex max-w-md flex-col gap-5 px-4 py-6">
+    <main className={page}>
       <header className="flex items-center justify-between">
-        <h1 className="text-3xl font-extrabold tracking-tight">Our dates</h1>
+        <h1 className={pageTitle}>Our dates</h1>
         <Link href="/dates/new" className={button}>
           + Log a date
         </Link>
       </header>
 
       {plans.length === 0 && (
-        <p className={card}>No dates yet. Log your first one! 💕</p>
+        <p className={`${card} font-bold`}>
+          No dates yet. Log your first one! 💕
+        </p>
       )}
 
       {upcoming.length > 0 && (
         <section className="flex flex-col gap-3">
-          <h2 className="text-lg font-bold">Coming up</h2>
+          <h2 className={cardTitle}>Coming up</h2>
           {upcoming.map((plan) => (
             <PlanCard
               key={plan.id}
@@ -54,7 +64,7 @@ export default async function DatesPage() {
 
       {past.length > 0 && (
         <section className="flex flex-col gap-3">
-          <h2 className="text-lg font-bold">Memories</h2>
+          <h2 className={cardTitle}>Memories</h2>
           {past.map((plan) => (
             <PlanCard key={plan.id} plan={plan} aside={averageHearts(plan)} />
           ))}
@@ -67,20 +77,25 @@ export default async function DatesPage() {
 function PlanCard({ plan, aside }: { plan: Plan; aside: string | null }) {
   const occasion = SPECIAL_DATES.find((d) => d.id === plan.occasionId);
   return (
-    <Link href={`/dates/${plan.id}`} className={`${card} flex gap-3`}>
-      <span className="text-2xl">{occasion?.emoji ?? "💌"}</span>
-      <div className="flex-1">
-        <p className="font-semibold">{plan.title}</p>
-        <p className="text-sm opacity-70">{formatDay(dayKeyOf(plan.day))}</p>
+    <Link
+      href={`/dates/${plan.id}`}
+      className={`${card} flex items-center gap-3.5 lg:gap-4`}
+    >
+      <span className={emojiTile}>{occasion?.emoji ?? "💌"}</span>
+      <div className="min-w-0 flex-1">
+        <p className="font-display text-lg leading-tight font-bold">
+          {plan.title}
+        </p>
+        <p className="text-[13px] font-bold opacity-70">
+          {formatDay(dayKeyOf(plan.day))}
+        </p>
         {plan.stops.length > 0 && (
-          <p className="mt-1 text-sm">
+          <p className="mt-0.5 text-xs font-bold opacity-65">
             {plan.stops.map((s) => s.place.name).join(" → ")}
           </p>
         )}
       </div>
-      {aside && (
-        <span className="text-sm font-semibold whitespace-nowrap">{aside}</span>
-      )}
+      {aside && <span className={blushPill}>{aside}</span>}
     </Link>
   );
 }

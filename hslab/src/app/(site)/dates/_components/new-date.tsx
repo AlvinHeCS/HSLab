@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 
-import { DateForm } from "~/app/dates/_components/date-form";
+import { DateForm } from "~/app/(site)/dates/_components/date-form";
 import { api } from "~/trpc/react";
 
 export function NewDate({

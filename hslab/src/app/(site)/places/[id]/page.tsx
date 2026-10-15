@@ -1,11 +1,18 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { card, quietButton } from "~/app/_components/ui";
+import {
+  card,
+  cardTitle,
+  chip,
+  eyebrow,
+  link,
+  page,
+} from "~/app/_components/ui";
 import {
   PlaceWishlist,
   WebsiteForm,
-} from "~/app/places/_components/place-actions";
+} from "~/app/(site)/places/_components/place-actions";
 import { PERSON_NAME } from "~/lib/people";
 import { dayKeyOf, formatDay } from "~/lib/special-dates";
 import { api } from "~/trpc/server";
@@ -26,24 +33,17 @@ export default async function PlacePage({
   )}`;
 
   return (
-    <main className="mx-auto flex max-w-md flex-col gap-5 px-4 py-6">
+    <main className={page}>
       <section className={`${card} flex flex-col gap-3`}>
         <div>
-          {place.category && (
-            <p className="text-xs font-semibold tracking-wide uppercase opacity-60">
-              {place.category}
-            </p>
-          )}
-          <h1 className="text-2xl font-extrabold">{place.name}</h1>
-          {where && <p className="opacity-80">{where}</p>}
+          {place.category && <p className={eyebrow}>{place.category}</p>}
+          <h1 className="font-display text-[26px] leading-tight font-bold">
+            {place.name}
+          </h1>
+          {where && <p className="text-sm font-bold opacity-70">{where}</p>}
         </div>
         <div className="flex flex-wrap gap-2">
-          <a
-            href={mapsUrl}
-            target="_blank"
-            rel="noreferrer"
-            className={`${quietButton} bg-[#f9e2e1]`}
-          >
+          <a href={mapsUrl} target="_blank" rel="noreferrer" className={chip}>
             📍 Open in Google Maps ↗
           </a>
           {place.website && (
@@ -51,23 +51,20 @@ export default async function PlacePage({
               href={place.website}
               target="_blank"
               rel="noreferrer"
-              className={`${quietButton} bg-[#f9e2e1]`}
+              className={chip}
             >
               🔗 Website / book ↗
             </a>
           )}
-          <Link
-            href={`/dates/new?place=${place.id}`}
-            className={`${quietButton} bg-[#f9e2e1]`}
-          >
+          <Link href={`/dates/new?place=${place.id}`} className={chip}>
             💌 Plan a date here
           </Link>
         </div>
         <WebsiteForm placeId={place.id} website={place.website} />
         {place.wishlist && (
-          <p className="text-sm">
+          <p className="text-sm font-semibold">
             ⭐{" "}
-            <span className="font-semibold">
+            <span className="font-extrabold">
               {PERSON_NAME[place.wishlist.addedBy]}
             </span>{" "}
             wants to go
@@ -84,20 +81,22 @@ export default async function PlacePage({
       </section>
 
       <section className={card}>
-        <h2 className="mb-3 text-lg font-bold">Our visits</h2>
+        <h2 className={`${cardTitle} mb-3`}>Our visits</h2>
         {place.stops.length === 0 ? (
-          <p className="text-sm opacity-70">We haven&apos;t been here yet.</p>
+          <p className="text-sm font-bold opacity-70">
+            We haven&apos;t been here yet.
+          </p>
         ) : (
-          <ul className="divide-y divide-[#f9e2e1]">
+          <ul className="divide-blush divide-y-2">
             {place.stops.map((stop) => (
               <li key={stop.id} className="py-2">
                 <Link
                   href={`/dates/${stop.plan.id}`}
-                  className="font-semibold underline decoration-dotted"
+                  className={`font-extrabold ${link}`}
                 >
                   {stop.plan.title}
                 </Link>
-                <p className="text-sm opacity-70">
+                <p className="text-xs font-bold opacity-65">
                   {formatDay(dayKeyOf(stop.plan.day))}
                 </p>
                 <p className="text-sm">
@@ -112,7 +111,7 @@ export default async function PlacePage({
       </section>
 
       {place.source === "osm" && (
-        <p className="text-center text-xs opacity-60">
+        <p className="text-center text-xs font-bold opacity-60">
           Place data ©{" "}
           <a
             href="https://www.openstreetmap.org/copyright"

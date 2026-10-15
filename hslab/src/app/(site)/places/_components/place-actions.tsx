@@ -7,7 +7,7 @@ import { button, input, quietButton } from "~/app/_components/ui";
 import {
   WishlistDetails,
   WishlistRemove,
-} from "~/app/wishlist/_components/wishlist-add";
+} from "~/app/(site)/wishlist/_components/wishlist-add";
 import { api } from "~/trpc/react";
 
 export function PlaceWishlist({

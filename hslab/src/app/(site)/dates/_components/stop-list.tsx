@@ -6,7 +6,7 @@ import { useState } from "react";
 
 import { Hearts } from "~/app/_components/hearts";
 import { PlaceSearch } from "~/app/_components/place-search";
-import { input, quietButton } from "~/app/_components/ui";
+import { input, link, quietButton } from "~/app/_components/ui";
 import { api, type RouterOutputs } from "~/trpc/react";
 
 type Stop = NonNullable<RouterOutputs["dates"]["byId"]>["stops"][number];
@@ -49,7 +49,9 @@ export function StopList({
         placeholder="Add a stop: search Sydney places…"
         onPick={(place) => addStop.mutate({ planId, placeId: place.id })}
       />
-      {addStop.isPending && <p className="text-sm opacity-70">Adding…</p>}
+      {addStop.isPending && (
+        <p className="text-sm font-bold opacity-70">Adding…</p>
+      )}
     </div>
   );
 }
@@ -77,19 +79,19 @@ function StopRow({
   const busy = move.isPending || remove.isPending;
 
   return (
-    <li className="rounded-2xl bg-white p-3">
+    <li className="border-ink bg-cream rounded-2xl border-2 p-3">
       <div className="flex items-start gap-2">
-        <span className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full bg-[#f9e2e1] text-xs font-bold">
+        <span className="bg-ink font-display text-cream mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-bold">
           {position}
         </span>
         <div className="flex-1">
           <Link
             href={`/places/${stop.place.id}`}
-            className="font-semibold underline decoration-dotted"
+            className={`font-extrabold ${link}`}
           >
             {stop.place.name}
           </Link>
-          <p className="text-xs opacity-70">
+          <p className="text-xs font-bold opacity-65">
             {[stop.place.category, stop.place.suburb]
               .filter(Boolean)
               .join(" · ")}

@@ -1,8 +1,30 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
+  --font-sans:
+    var(--font-nunito), ui-rounded, ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-display:
+    var(--font-fredoka), ui-rounded, ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji";
+
+  /* Sticker Book palette */
+  --color-ink: #5b4636;
+  --color-cream: #fff6ee;
+  --color-blush: #f9e2e1;
+  --color-sticker: #f3b9b6;
+}
+
+/* Dot-grid "paper" behind every page. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(#f2c9c6 1.4px, transparent 1.6px);
+  background-size: 22px 22px;
+  opacity: 0.6;
 }
 
 @keyframes confetti-fall {

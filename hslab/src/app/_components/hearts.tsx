@@ -14,7 +14,9 @@ export function Hearts({
 }) {
   return (
     <div className="flex items-center gap-2">
-      <span className="w-14 text-xs font-semibold opacity-70">{label}</span>
+      <span className="font-display w-14 text-xs font-semibold opacity-70">
+        {label}
+      </span>
       <div className="flex" role="radiogroup" aria-label={`${label}'s rating`}>
         {[1, 2, 3, 4, 5].map((n) => (
           <button

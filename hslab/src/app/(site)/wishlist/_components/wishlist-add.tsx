@@ -3,10 +3,9 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-import type { Person } from "../../../../generated/prisma";
 import { PlaceSearch } from "~/app/_components/place-search";
 import { button, input, quietButton } from "~/app/_components/ui";
-import { PERSON_NAME } from "~/lib/people";
+import { type Person, PERSON_NAME } from "~/lib/people";
 import { api, type RouterOutputs } from "~/trpc/react";
 
 type SavedPlace = RouterOutputs["place"]["save"];
@@ -62,7 +61,7 @@ export function WishlistDetails({
         onSave(addedBy, reason.trim() || undefined);
       }}
     >
-      <p className="font-semibold">⭐ {placeName}</p>
+      <p className="font-display text-lg font-bold">⭐ {placeName}</p>
       <div
         className="flex gap-2"
         role="radiogroup"
@@ -75,8 +74,10 @@ export function WishlistDetails({
             role="radio"
             aria-checked={addedBy === person}
             onClick={() => setAddedBy(person)}
-            className={`rounded-full px-4 py-1.5 text-sm font-semibold ${
-              addedBy === person ? "bg-[#5b4636] text-white" : "bg-white"
+            className={`border-ink font-display rounded-full border-2 px-4 py-1.5 text-sm font-semibold ${
+              addedBy === person
+                ? "bg-ink text-cream"
+                : "hover:bg-blush bg-white"
             }`}
           >
             {PERSON_NAME[person]} wants to go

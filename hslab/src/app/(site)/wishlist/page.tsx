@@ -1,10 +1,10 @@
 import Link from "next/link";
 
-import { card, quietButton } from "~/app/_components/ui";
+import { card, chip, link, page, pageTitle } from "~/app/_components/ui";
 import {
   WishlistAdd,
   WishlistRemove,
-} from "~/app/wishlist/_components/wishlist-add";
+} from "~/app/(site)/wishlist/_components/wishlist-add";
 import { PERSON_NAME } from "~/lib/people";
 import { api } from "~/trpc/server";
 
@@ -14,15 +14,15 @@ export default async function WishlistPage() {
   const items = await api.wishlist.list();
 
   return (
-    <main className="mx-auto flex max-w-md flex-col gap-5 px-4 py-6">
-      <h1 className="text-3xl font-extrabold tracking-tight">Wishlist</h1>
+    <main className={page}>
+      <h1 className={pageTitle}>Wishlist</h1>
 
       <section className={card}>
         <WishlistAdd />
       </section>
 
       {items.length === 0 && (
-        <p className="text-center opacity-70">
+        <p className="text-center font-bold opacity-70">
           Nothing here yet. Add a place you want to try together.
         </p>
       )}
@@ -34,16 +34,16 @@ export default async function WishlistPage() {
               <div>
                 <Link
                   href={`/places/${item.place.id}`}
-                  className="font-semibold underline decoration-dotted"
+                  className={`font-display text-lg font-bold ${link}`}
                 >
                   {item.place.name}
                 </Link>
                 {item.place._count.stops > 0 && (
-                  <span className="ml-2 rounded-full bg-[#f9e2e1] px-2 py-0.5 text-xs font-semibold">
+                  <span className="bg-blush font-display ml-2 rounded-full px-2 py-0.5 text-xs font-bold">
                     ✓ Been
                   </span>
                 )}
-                <p className="text-xs opacity-70">
+                <p className="text-xs font-bold opacity-65">
                   {[item.place.category, item.place.suburb]
                     .filter(Boolean)
                     .join(" · ")}
@@ -55,13 +55,15 @@ export default async function WishlistPage() {
                 ariaLabel={`Remove ${item.place.name} from wishlist`}
               />
             </div>
-            <p className="mt-2 text-sm">
-              <span className="font-semibold">{PERSON_NAME[item.addedBy]}</span>{" "}
+            <p className="mt-2 text-sm font-semibold">
+              <span className="font-extrabold">
+                {PERSON_NAME[item.addedBy]}
+              </span>{" "}
               wants to go{item.reason ? `: ${item.reason}` : ""}
             </p>
             <Link
               href={`/dates/new?place=${item.place.id}`}
-              className={`${quietButton} mt-2 inline-block bg-[#f9e2e1]`}
+              className={`${chip} mt-3`}
             >
               💌 Plan a date here
             </Link>

@@ -3,12 +3,13 @@
 import Link from "next/link";
 import { useState } from "react";
 
+import { card, link } from "~/app/_components/ui";
 import { type DayKey, occurrencesInMonth } from "~/lib/special-dates";
+
+const WEEKDAYS = ["M", "T", "W", "T", "F", "S", "S"];
 
 /** A date we've logged or planned, shown alongside the special dates. */
 type Outing = { id: string; title: string; day: DayKey };
-
-const WEEKDAYS = ["M", "T", "W", "T", "F", "S", "S"];
 
 export function Calendar({
   today,
@@ -41,30 +42,32 @@ export function Calendar({
   }).format(new Date(Date.UTC(view.year, view.month - 1, 1)));
 
   return (
-    <section className="rounded-3xl bg-white/80 p-5 shadow-sm">
-      <div className="mb-4 flex items-center justify-between">
+    <section className={card}>
+      <div className="mb-2.5 flex items-center justify-between lg:mb-3">
         <button
           type="button"
           onClick={() => shiftMonth(-1)}
-          className="rounded-full px-3 py-1 text-xl hover:bg-[#f9e2e1]"
+          className="font-display hover:bg-blush rounded-full px-2 text-[22px] font-bold lg:text-2xl"
           aria-label="Previous month"
         >
           ‹
         </button>
-        <h2 className="text-lg font-bold">{monthName}</h2>
+        <h2 className="font-display text-lg font-bold lg:text-xl">
+          {monthName}
+        </h2>
         <button
           type="button"
           onClick={() => shiftMonth(1)}
-          className="rounded-full px-3 py-1 text-xl hover:bg-[#f9e2e1]"
+          className="font-display hover:bg-blush rounded-full px-2 text-[22px] font-bold lg:text-2xl"
           aria-label="Next month"
         >
           ›
         </button>
       </div>
 
-      <div className="grid grid-cols-7 gap-1 text-center text-sm">
+      <div className="grid grid-cols-7 gap-1 text-center text-[13px] font-extrabold lg:gap-1.5 lg:text-sm">
         {WEEKDAYS.map((weekday, i) => (
-          <p key={i} className="pb-1 text-xs font-semibold opacity-60">
+          <p key={i} className="text-[11px] opacity-50">
             {weekday}
           </p>
         ))}
@@ -75,6 +78,7 @@ export function Calendar({
           const day = i + 1;
           const special = specials.find((s) => s.day === day);
           const outing = monthOutings.find((o) => o.day.day === day);
+          const emoji = special?.emoji ?? (outing && "💌");
           const isToday =
             view.year === today.year &&
             view.month === today.month &&
@@ -83,15 +87,21 @@ export function Calendar({
             <div
               key={day}
               title={special?.title ?? outing?.title}
-              className={`flex aspect-square flex-col items-center justify-center rounded-xl ${
-                special || outing ? "bg-[#f9e2e1] font-bold" : ""
-              } ${isToday ? "ring-2 ring-[#5b4636]" : ""}`}
+              className={`flex flex-col items-center justify-center rounded-[10px] lg:rounded-xl ${
+                emoji ? "py-1 lg:py-[5px]" : "py-1.5 lg:py-2"
+              } ${
+                isToday
+                  ? "bg-ink text-white"
+                  : emoji
+                    ? "border-ink bg-blush border-2"
+                    : ""
+              }`}
             >
               <span>{day}</span>
-              {special ? (
-                <span className="text-xs">{special.emoji}</span>
-              ) : (
-                outing && <span className="text-xs">💌</span>
+              {emoji && (
+                <span className="text-[10px] leading-none lg:text-[11px]">
+                  {emoji}
+                </span>
               )}
             </div>
           );
@@ -99,21 +109,17 @@ export function Calendar({
       </div>
 
       {specials.length + monthOutings.length > 0 && (
-        <ul className="mt-4 space-y-1 text-sm">
+        <ul className="mt-3.5 flex flex-col gap-1.5 text-[13px] font-bold">
           {specials.map((special) => (
             <li key={special.id}>
-              {special.emoji} {special.day} —{" "}
-              <span className="font-semibold">{special.title}</span>
+              {special.emoji} {special.day} — {special.title}
               {special.age !== undefined && ` (turns ${special.age})`}
             </li>
           ))}
           {monthOutings.map((outing) => (
             <li key={outing.id}>
               💌 {outing.day.day} —{" "}
-              <Link
-                href={`/dates/${outing.id}`}
-                className="font-semibold underline decoration-dotted"
-              >
+              <Link href={`/dates/${outing.id}`} className={link}>
                 {outing.title}
               </Link>
             </li>

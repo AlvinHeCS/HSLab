@@ -2,7 +2,7 @@ import Image from "next/image";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { button, card, input } from "~/app/_components/ui";
+import { button, card, input, pageTitle } from "~/app/_components/ui";
 import bears from "~/app/icon.png";
 import { env } from "~/env";
 import { LOCK_COOKIE, lockToken, safeNextPath } from "~/server/site-lock";
@@ -35,23 +35,28 @@ export default async function UnlockPage({
   const { next, wrong } = await searchParams;
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-sm flex-col justify-center gap-5 px-4">
-      <div className="flex flex-col items-center gap-2 text-center">
+    <main className="mx-auto flex min-h-screen max-w-sm flex-col justify-center gap-6 px-5">
+      <div className="flex flex-col items-center gap-3 text-center">
         <Image
           src={bears}
           alt=""
           width={96}
           height={96}
-          className="rounded-3xl"
+          className="border-ink bg-blush size-24 -rotate-6 rounded-[28px] border-[3px]"
           priority
         />
-        <h1 className="text-3xl font-extrabold tracking-tight">Bubbyverse</h1>
+        <div>
+          <h1 className={pageTitle}>Bubbyverse</h1>
+          <p className="mt-1 text-sm font-bold opacity-70">
+            Alvin &amp; Vivian
+          </p>
+        </div>
       </div>
 
       <form action={unlock} className={`${card} flex flex-col gap-3`}>
         <input type="hidden" name="next" value={safeNextPath(next)} />
         <label className="flex flex-col gap-1">
-          <span className="text-sm font-semibold">Passphrase</span>
+          <span className="font-display text-sm font-semibold">Passphrase</span>
           <input
             name="passphrase"
             type="password"
@@ -61,7 +66,11 @@ export default async function UnlockPage({
             className={input}
           />
         </label>
-        {wrong && <p className="text-sm text-red-700">Not quite, try again.</p>}
+        {wrong && (
+          <p className="text-sm font-bold text-red-700">
+            Not quite, try again.
+          </p>
+        )}
         <button type="submit" className={button}>
           Let me in 💕
         </button>

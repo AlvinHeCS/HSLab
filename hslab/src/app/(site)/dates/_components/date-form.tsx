@@ -37,7 +37,9 @@ export function DateForm({
       }}
     >
       <label className="flex flex-col gap-1">
-        <span className="text-sm font-semibold">What are we doing?</span>
+        <span className="font-display text-sm font-semibold">
+          What are we doing?
+        </span>
         <input
           required
           maxLength={120}
@@ -48,7 +50,7 @@ export function DateForm({
         />
       </label>
       <label className="flex flex-col gap-1">
-        <span className="text-sm font-semibold">When?</span>
+        <span className="font-display text-sm font-semibold">When?</span>
         <input
           type="date"
           required
@@ -58,7 +60,9 @@ export function DateForm({
         />
       </label>
       <label className="flex flex-col gap-1">
-        <span className="text-sm font-semibold">Special occasion?</span>
+        <span className="font-display text-sm font-semibold">
+          Special occasion?
+        </span>
         <select
           value={values.occasionId ?? ""}
           onChange={(e) => set({ occasionId: e.target.value || null })}
@@ -73,7 +77,7 @@ export function DateForm({
         </select>
       </label>
       <label className="flex flex-col gap-1">
-        <span className="text-sm font-semibold">Notes</span>
+        <span className="font-display text-sm font-semibold">Notes</span>
         <textarea
           rows={3}
           maxLength={2000}

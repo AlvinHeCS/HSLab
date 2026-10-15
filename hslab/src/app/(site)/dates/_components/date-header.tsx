@@ -7,7 +7,7 @@ import { quietButton } from "~/app/_components/ui";
 import {
   DateForm,
   type DateFormValues,
-} from "~/app/dates/_components/date-form";
+} from "~/app/(site)/dates/_components/date-form";
 import { api } from "~/trpc/react";
 
 /** Title block for one date, with edit and delete. */

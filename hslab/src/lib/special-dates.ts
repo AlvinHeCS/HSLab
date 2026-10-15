@@ -6,6 +6,9 @@ export const TIME_ZONE = "Australia/Sydney";
 
 export type DayKey = { year: number; month: number; day: number };
 
+/** The day we got together; the anniversary below recurs from it. */
+export const TOGETHER_SINCE: DayKey = { year: 2026, month: 6, day: 19 };
+
 type SpecialDate = {
   id: string;
   title: string;
@@ -198,6 +201,31 @@ export function formatDay(date: DayKey): string {
     month: "short",
     year: "numeric",
   }).format(new Date(toUtc(date)));
+}
+
+/** "Sat, 24 Oct", for dates that are obviously this year or next. */
+export function formatShortDay(date: DayKey): string {
+  return new Intl.DateTimeFormat("en-AU", {
+    timeZone: "UTC",
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+  }).format(new Date(toUtc(date)));
+}
+
+/** "19 June 2026". */
+export function formatDayMonthYear(date: DayKey): string {
+  return new Intl.DateTimeFormat("en-AU", {
+    timeZone: "UTC",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  }).format(new Date(toUtc(date)));
+}
+
+/** Which day of being together `today` is; the first day is day 1. */
+export function daysTogether(today: DayKey): number {
+  return daysUntil(today, TOGETHER_SINCE) + 1;
 }
 
 export function formatDaysUntil(days: number): string {
